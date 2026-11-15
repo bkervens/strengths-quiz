@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Find Your Leadership Strengths Domain</title>
+<style>
+:root{--bg:#f6f4f2;--fg:#1d1d1f;--card:#fff;--muted:#6b6b70;--border:#dcd7d3;--brand:#8c1d2f;--brand-fg:#fff;
+--E:#6a4c93;--I:#d9780f;--R:#2f6fb5;--S:#b5232f;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171517;--fg:#f2eeee;--card:#241f22;--muted:#a9a2a5;--border:#3a3337;--brand:#c4455a;--brand-fg:#fff}}
+:root[data-theme="dark"]{--bg:#171517;--fg:#f2eeee;--card:#241f22;--muted:#a9a2a5;--border:#3a3337;--brand:#c4455a;--brand-fg:#fff}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.45}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px 40px}
+header{border-top:6px solid var(--brand);padding-top:14px}
+h1{font-size:1.5rem;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 18px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+.btn{display:block;width:100%;text-align:left;background:var(--card);color:var(--fg);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;margin:10px 0;font:inherit;cursor:pointer}
+.btn:hover,.btn:focus-visible{border-color:var(--brand);outline:none}
+.primary{background:var(--brand);color:var(--brand-fg);border-color:var(--brand);text-align:center;font-weight:600}
+.bar{height:8px;background:var(--border);border-radius:99px;overflow:hidden;margin:6px 0 18px}
+.bar>i{display:block;height:100%;background:var(--brand);width:0;transition:width .25s}
+.q{font-size:1.15rem;font-weight:600;margin:0 0 8px}
+.small{color:var(--muted);font-size:.85rem}
+.dom{display:grid;grid-template-columns:130px 1fr 34px;gap:8px;align-items:center;margin:8px 0;font-size:.92rem}
+.track{height:14px;background:var(--border);border-radius:99px;overflow:hidden}
+.track>i{display:block;height:100%;border-radius:99px}
+.tag{display:inline-block;color:#fff;border-radius:99px;padding:3px 12px;font-weight:700;font-size:.85rem;margin-bottom:8px}
+h2{font-size:1.4rem;margin:4px 0 6px}
+h3{font-size:1rem;margin:16px 0 4px}
+ul{margin:4px 0 0 18px;padding:0}
+.hide{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><h1>Find Your Leadership Strengths Domain</h1>
+<p class="sub">12 quick questions. Pick the answer that is <b>most like you</b>. There are no right answers.</p></header>
+
+<div id="start" class="card">
+<p>Strengths-based leaders start by knowing where they naturally excel. This snapshot sorts your answers into four domains of leadership strength: <b>Executing, Influencing, Relationship Building,</b> and <b>Strategic Thinking</b>. It takes about two minutes.</p>
+<button class="btn primary" id="go">Start</button>
+<p class="small">An informal class activity modeled on Gallup’s four domains. It is not the CliftonStrengths assessment.</p>
+</div>
+
+<div id="quiz" class="card hide">
+<div class="small" id="count"></div>
+<div class="bar"><i id="prog"></i></div>
+<p class="q" id="qtext"></p>
+<div id="opts"></div>
+</div>
+
+<div id="result" class="card hide"></div>
+</div>
+
+<script>
+var D = {
+E:{name:"Executing",color:"var(--E)",
+ blurb:"You make things happen. When there is work to do, you turn plans into finished results and others can count on you.",
+ lead:["Set clear goals, dates, and owners so the team can see progress.","Be the steady voice that keeps projects moving through the middle.","Celebrate completed milestones, not just effort."],
+ watch:"Pushing for speed can leave quieter voices and new ideas behind. Slow down to ask what the team thinks.",
+ pair:"Pair with Strategic Thinking to choose the right work, and Relationship Building to keep people energized."},
+I:{name:"Influencing",color:"var(--I)",
+ blurb:"You take charge, speak up, and make sure the team is heard. You are good at getting others to buy in and move.",
+ lead:["Be the voice that explains why the work matters.","Pitch ideas and win support from people outside your team.","Give your team confidence to speak up too."],
+ watch:"Strong voices can crowd out others. Leave room for listening before you persuade.",
+ pair:"Pair with Executing to follow through, and Strategic Thinking to back your pitch with analysis."},
+R:{name:"Relationship Building",color:"var(--R)",
+ blurb:"You build strong bonds that hold a team together and can make the team greater than the sum of its parts.",
+ lead:["Learn what each person is good at and what energizes them.","Create trust so people share problems early.","Connect teammates who can help each other."],
+ watch:"Wanting everyone comfortable can delay hard feedback. Be kind and honest at the same time.",
+ pair:"Pair with Executing to land results, and Influencing to carry your team’s voice upward."},
+S:{name:"Strategic Thinking",color:"var(--S)",
+ blurb:"You help teams consider what could be. You absorb and analyze information so better decisions can be made.",
+ lead:["Bring data and the bigger picture into decisions.","Spot risks and opportunities others miss.","Help the team see where today’s work leads."],
+ watch:"Analysis can turn into delay. Set a point where the team decides and acts.",
+ pair:"Pair with Executing to turn ideas into action, and Influencing to get your ideas heard."}
+};
+var Q = [
+["When a big deadline is coming, I most naturally…",{E:"Make a checklist and keep everyone on task until it is done.",I:"Rally the team and explain why it matters.",R:"Check in on how each person is holding up.",S:"Look for a smarter way to get it done."}],
+["In a group project, I am usually the one who…",{E:"Finishes my part early and follows through.",I:"Speaks up and takes charge when no one else does.",R:"Keeps the group getting along.",S:"Spots problems and possibilities others missed."}],
+["When a team disagreement comes up, I…",{E:"Push to decide and get back to the work.",I:"State my view clearly and try to persuade.",R:"Listen to each side and look for common ground.",S:"Step back and look at the facts and the bigger picture."}],
+["People most often come to me for…",{E:"Reliability. I get things done.",I:"Confidence and motivation.",R:"Support and trust.",S:"Ideas and plans."}],
+["My ideal workday includes…",{E:"Checking off a long to-do list.",I:"Presenting or pitching to a group.",R:"One-on-one conversations with teammates.",S:"Researching and thinking through a challenge."}],
+["When I start something new, I first…",{E:"Set a plan with dates and next steps.",I:"Get people excited to join.",R:"Find out who is involved and what they need.",S:"Ask what could be and weigh the options."}],
+["I feel proudest when…",{E:"I finish what I committed to, no matter what.",I:"I persuade a group to move in a new direction.",R:"Someone tells me I made them feel valued.",S:"My analysis changes how the team decides."}],
+["When things go wrong, I…",{E:"Roll up my sleeves and fix it.",I:"Take charge and reassure the group.",R:"Make sure no one is blamed unfairly.",S:"Look for the root cause."}],
+["In meetings, I…",{E:"Want a clear agenda and action items.",I:"Am comfortable speaking up and being heard.",R:"Notice who is quiet and invite them in.",S:"Connect today’s topic to long-term goals."}],
+["When a teammate is struggling, I…",{E:"Help them get their tasks finished.",I:"Encourage them and build their confidence to speak up.",R:"Sit down and try to understand what is going on.",S:"Help them see a better approach."}],
+["People describe me as…",{E:"Dependable and disciplined.",I:"Bold and persuasive.",R:"Warm and approachable.",S:"Curious and thoughtful."}],
+["If I could lead any project, it would be…",{E:"An event that has to run perfectly.",I:"Pitching a big idea to win support.",R:"Building a close-knit team.",S:"Designing a new strategy."}]
+];
+var i=0, score;
+function $(id){return document.getElementById(id)}
+function shuffle(a){for(var k=a.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1));var t=a[k];a[k]=a[j];a[j]=t}return a}
+function start(){i=0;score={E:0,I:0,R:0,S:0};$("start").classList.add("hide");$("result").classList.add("hide");$("quiz").classList.remove("hide");show()}
+function show(){
+ $("count").textContent="Question "+(i+1)+" of "+Q.length;
+ $("prog").style.width=(i/Q.length*100)+"%";
+ $("qtext").textContent=Q[i][0];
+ var box=$("opts");box.innerHTML="";
+ shuffle(Object.keys(Q[i][1])).forEach(function(k){
+  var b=document.createElement("button");b.className="btn";b.textContent=Q[i][1][k];
+  b.onclick=function(){score[k]++;i++;if(i<Q.length)show();else finish()};
+  box.appendChild(b)})
+}
+function finish(){
+ $("quiz").classList.add("hide");
+ var keys=Object.keys(score).sort(function(a,b){return score[b]-score[a]});
+ var top=keys.filter(function(k){return score[k]===score[keys[0]]});
+ var h="";
+ var d=D[top[0]];
+ h+='<div class="tag" style="background:'+d.color+'">'+(top.length>1?"Tie: "+top.map(function(k){return D[k].name}).join(" + "):"Your top domain")+'</div>';
+ h+='<h2>'+top.map(function(k){return D[k].name}).join(" and ")+'</h2>';
+ top.forEach(function(k){h+='<p>'+D[k].blurb+'</p>'});
+ h+='<h3>Your scores</h3>';
+ keys.forEach(function(k){h+='<div class="dom"><span>'+D[k].name+'</span><div class="track"><i style="width:'+(score[k]/Q.length*100)+'%;background:'+D[k].color+'"></i></div><b>'+score[k]+'</b></div>'});
+ top.forEach(function(k){
+  h+='<h3>How you can lead with '+D[k].name+'</h3><ul>'+D[k].lead.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul>';
+  h+='<h3>Watch out for overusing it</h3><p>'+D[k].watch+'</p>';
+  h+='<h3>Who to partner with</h3><p>'+D[k].pair+'</p>'});
+ h+='<p class="small">Strong teams have all four domains represented. Informal class activity, not the CliftonStrengths assessment.</p>';
+ h+='<button class="btn primary" id="again">Take it again</button>';
+ $("result").innerHTML=h;$("result").classList.remove("hide");
+ $("again").onclick=start;window.scrollTo(0,0)
+}
+$("go").onclick=start;
+</script>
+</body>
+</html>
